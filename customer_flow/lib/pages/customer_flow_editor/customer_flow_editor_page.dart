@@ -50,7 +50,7 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
       list.add(
         Client(
           name: 'Cliente ${(i + 1).toString().padLeft(2, '0')}',
-          detail: 'Detalle del cliente ${(i + 1)}',
+          detail: 'Detalle del cliente ${i + 1}',
           status: ClientStatus.pending,
           createdBy: widget.sessionStore.userProfile?.name ?? 'Sistema',
           createdAt: createdAt,
@@ -61,26 +61,20 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
   }
 
   List<Client> get _filteredClients {
-    final ordered = List<Client>.from(_clients)
-      ..sort((a, b) => a.createdAt.compareTo(b.createdAt));
+    final ordered = List<Client>.from(_clients)..sort((a, b) => a.createdAt.compareTo(b.createdAt));
 
     return ordered.where((client) {
       final matchesName = client.name.toLowerCase().contains(_nameFilter);
-      final matchesDesc =
-          client.detail.toLowerCase().contains(_descriptionFilter);
-      final matchesStatus =
-          _statusFilter == null || client.status == _statusFilter;
-      final matchesDate = _dateFilter == null ||
-          _isSameDay(client.createdAt, _dateFilter!);
+      final matchesDesc = client.detail.toLowerCase().contains(_descriptionFilter);
+      final matchesStatus = _statusFilter == null || client.status == _statusFilter;
+      final matchesDate = _dateFilter == null || _isSameDay(client.createdAt, _dateFilter!);
       return matchesName && matchesDesc && matchesStatus && matchesDate;
     }).toList();
   }
 
   void _toggleStatus(Client client) {
     setState(() {
-      client.status = client.status == ClientStatus.completed
-          ? ClientStatus.pending
-          : ClientStatus.completed;
+      client.status = client.status == ClientStatus.completed ? ClientStatus.pending : ClientStatus.completed;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
   }
@@ -94,8 +88,7 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
     );
   }
 
-  bool _isSameDay(DateTime a, DateTime b) =>
-      a.year == b.year && a.month == b.month && a.day == b.day;
+  bool _isSameDay(DateTime a, DateTime b) => a.year == b.year && a.month == b.month && a.day == b.day;
 
   String _formatDate(DateTime date) =>
       '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
@@ -106,9 +99,7 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
     final userName = widget.sessionStore.userProfile?.name ?? 'Invitado';
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Bienvenido $userName'),
-      ),
+      appBar: AppBar(title: Text('Bienvenido $userName')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -116,16 +107,9 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
           children: [
             Row(
               children: [
-                const Text(
-                  'Lista de Clientes',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+                const Text('Lista de Clientes', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add),
-                  label: const Text('Nuevo'),
-                ),
+                ElevatedButton.icon(onPressed: () {}, icon: const Icon(Icons.add), label: const Text('Nuevo')),
               ],
             ),
             const SizedBox(height: 16),
@@ -155,10 +139,7 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: ListView(
-                controller: _scrollController,
-                children: _buildGroupedClientWidgets(clients),
-              ),
+              child: ListView(controller: _scrollController, children: _buildGroupedClientWidgets(clients)),
             ),
           ],
         ),
@@ -227,23 +208,14 @@ class _FiltersSectionState extends State<_FiltersSection> {
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
               child: Row(
                 children: [
-                  Icon(
-                    _isExpanded ? Icons.expand_less : Icons.expand_more,
-                    color: headerColor,
-                  ),
+                  Icon(_isExpanded ? Icons.expand_less : Icons.expand_more, color: headerColor),
                   const SizedBox(width: 8),
                   Text(
                     'Filtros',
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: headerColor,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w600, color: headerColor),
                   ),
                   const Spacer(),
-                  Text(
-                    _isExpanded ? 'Ocultar' : 'Mostrar',
-                    style: TextStyle(color: headerColor),
-                  ),
+                  Text(_isExpanded ? 'Ocultar' : 'Mostrar', style: TextStyle(color: headerColor)),
                 ],
               ),
             ),
@@ -264,9 +236,7 @@ class _FiltersSectionState extends State<_FiltersSection> {
               formatDate: widget.formatDate,
             ),
           ),
-          crossFadeState: _isExpanded
-              ? CrossFadeState.showSecond
-              : CrossFadeState.showFirst,
+          crossFadeState: _isExpanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,
           duration: const Duration(milliseconds: 200),
         ),
       ],
@@ -317,10 +287,7 @@ class _FiltersForm extends StatelessWidget {
           children: [
             Expanded(
               child: TextField(
-                decoration: const InputDecoration(
-                  labelText: 'Filtrar por nombre',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: 'Filtrar por nombre', border: OutlineInputBorder()),
                 onChanged: onNameChanged,
               ),
             ),
@@ -328,27 +295,12 @@ class _FiltersForm extends StatelessWidget {
             Expanded(
               child: DropdownButtonFormField<ClientStatus?>(
                 initialValue: statusFilter,
-                decoration: const InputDecoration(
-                  labelText: 'Estado',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: 'Estado', border: OutlineInputBorder()),
                 items: const [
-                  DropdownMenuItem(
-                    value: null,
-                    child: Text('Todos'),
-                  ),
-                  DropdownMenuItem(
-                    value: ClientStatus.pending,
-                    child: Text('Pendiente'),
-                  ),
-                  DropdownMenuItem(
-                    value: ClientStatus.completed,
-                    child: Text('Completado'),
-                  ),
-                  DropdownMenuItem(
-                    value: ClientStatus.cancelled,
-                    child: Text('Cancelado'),
-                  ),
+                  DropdownMenuItem(child: Text('Todos')),
+                  DropdownMenuItem(value: ClientStatus.pending, child: Text('Pendiente')),
+                  DropdownMenuItem(value: ClientStatus.completed, child: Text('Completado')),
+                  DropdownMenuItem(value: ClientStatus.cancelled, child: Text('Cancelado')),
                 ],
                 onChanged: onStatusChanged,
               ),
@@ -357,10 +309,7 @@ class _FiltersForm extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         TextField(
-          decoration: const InputDecoration(
-            labelText: 'Filtrar por descripción',
-            border: OutlineInputBorder(),
-          ),
+          decoration: const InputDecoration(labelText: 'Filtrar por descripción', border: OutlineInputBorder()),
           onChanged: onDescriptionChanged,
         ),
         const SizedBox(height: 12),
@@ -371,19 +320,10 @@ class _FiltersForm extends StatelessWidget {
                 onTap: () => _pickDate(context),
                 borderRadius: BorderRadius.circular(4),
                 child: InputDecorator(
-                  decoration: const InputDecoration(
-                    labelText: 'Filtrar por fecha',
-                    border: OutlineInputBorder(),
-                  ),
+                  decoration: const InputDecoration(labelText: 'Filtrar por fecha', border: OutlineInputBorder()),
                   child: Text(
-                    dateFilter != null
-                        ? formatDate(dateFilter!)
-                        : 'Seleccionar fecha',
-                    style: TextStyle(
-                      color: dateFilter != null
-                          ? theme.colorScheme.onSurface
-                          : Colors.grey,
-                    ),
+                    dateFilter != null ? formatDate(dateFilter!) : 'Seleccionar fecha',
+                    style: TextStyle(color: dateFilter != null ? theme.colorScheme.onSurface : Colors.grey),
                   ),
                 ),
               ),
@@ -404,11 +344,7 @@ class _FiltersForm extends StatelessWidget {
 extension on _CustomerFlowEditorPageState {
   List<Widget> _buildGroupedClientWidgets(List<Client> clients) {
     if (clients.isEmpty) {
-      return [
-        const Center(
-          child: Text('No hay registros con los filtros actuales'),
-        ),
-      ];
+      return [const Center(child: Text('No hay registros con los filtros actuales'))];
     }
 
     final List<Widget> groups = [];
@@ -426,10 +362,7 @@ extension on _CustomerFlowEditorPageState {
             children: [
               Text(
                 'Registros del ${_formatDate(day)}',
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.grey),
               ),
               const SizedBox(height: 8),
               ...currentCards,
@@ -455,9 +388,7 @@ extension on _CustomerFlowEditorPageState {
             trailing: IconButton(
               icon: Icon(
                 Icons.check_circle,
-                color: client.status == ClientStatus.completed
-                    ? Colors.green
-                    : Colors.grey,
+                color: client.status == ClientStatus.completed ? Colors.green : Colors.grey,
               ),
               onPressed: () => _toggleStatus(client),
             ),
@@ -487,8 +418,4 @@ class Client {
   final DateTime createdAt;
 }
 
-enum ClientStatus {
-  pending,
-  completed,
-  cancelled,
-}
+enum ClientStatus { pending, completed, cancelled }

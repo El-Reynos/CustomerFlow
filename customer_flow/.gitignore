@@ -70,3 +70,6 @@ windows/flutter/ephemeral/
 
 # Linux
 linux/flutter/ephemeral/
+
+# FVM Version Cache
+.fvm/

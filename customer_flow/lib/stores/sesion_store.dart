@@ -6,8 +6,8 @@ class SessionStore = _SessionStore with _$SessionStore;
 
 abstract class _SessionStore with Store {
   @observable
-  User? userProfile ;
+  User? userProfile;
 
   @action
-  void setUserProfile (User value) => userProfile  = value;
+  void setUserProfile(User value) => userProfile = value;
 }
