@@ -1,26 +1,23 @@
 import 'package:customer_flow/stores/sesion_store.dart';
+import 'package:flutter/material.dart';
 import 'package:mobx/mobx.dart';
+import 'package:provider/provider.dart';
 part 'login_store.g.dart';
 
 class LoginStore = _LoginStore with _$LoginStore;
 
-abstract class _LoginStore with Store {
-  _LoginStore({required SessionStore sessionStore})
-      : _sessionStore = sessionStore;
+extension LoginStoreContextExtension on BuildContext {
+  LoginStore get loginStore => read<LoginStore>();
+}
 
-  final SessionStore _sessionStore;
-  
+abstract class _LoginStore with Store {
+  final SessionStore sessionStore;
+
+  _LoginStore({required this.sessionStore});
+
   static const List<User> _users = [
-    User(
-      id: '6655bdf2b2cba31a51234567',
-      name: 'Conrado',
-      password: 'Conrado123',
-    ),
-    User(
-      id: '6655bdf2b2cba31a51234568',
-      name: 'Tefy',
-      password: 'Tefy123',
-    ),
+    User(id: '6655bdf2b2cba31a51234567', name: 'Conrado', password: 'Conrado123'),
+    User(id: '6655bdf2b2cba31a51234568', name: 'Tefy', password: 'Tefy123'),
   ];
 
   @readonly
@@ -29,18 +26,18 @@ abstract class _LoginStore with Store {
   @readonly
   String _password = '';
 
-  @observable
-  bool isLoading = false;
+  @readonly
+  bool _isLoading = false;
 
-  @observable
-  String? errorMessage;
+  @readonly
+  String? _errorMessage;
 
-  @observable
-  bool obscurePassword = true;
+  @readonly
+  bool _obscurePassword = true;
 
   @action
   void togglePasswordVisibility() {
-    obscurePassword = !obscurePassword;
+    _obscurePassword = !_obscurePassword;
   }
 
   @action
@@ -55,8 +52,8 @@ abstract class _LoginStore with Store {
 
   @action
   Future<bool> login() async {
-    isLoading = true;
-    errorMessage = null;
+    _isLoading = true;
+    _errorMessage = null;
 
     User? user;
 
@@ -67,13 +64,13 @@ abstract class _LoginStore with Store {
       }
     }
 
-    isLoading = false;
+    _isLoading = false;
 
     if (user != null) {
-      _sessionStore.setUserProfile(user);
+      sessionStore.setUserProfile(user);
       return true;
     } else {
-      errorMessage = 'Nombre o contraseña incorrectos';
+      _errorMessage = 'Nombre o contraseña incorrectos';
       return false;
     }
   }

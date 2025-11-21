@@ -2,9 +2,7 @@ import 'package:customer_flow/stores/sesion_store.dart';
 import 'package:flutter/material.dart';
 
 class CustomerFlowEditorPage extends StatefulWidget {
-  const CustomerFlowEditorPage({super.key, required this.sessionStore});
-
-  final SessionStore sessionStore;
+  const CustomerFlowEditorPage({super.key});
 
   @override
   State<CustomerFlowEditorPage> createState() => _CustomerFlowEditorPageState();
@@ -19,10 +17,12 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
   ClientStatus? _statusFilter;
   DateTime? _dateFilter;
   bool _filtersExpanded = false;
+  late SessionStore sessionStore;
 
   @override
   void initState() {
     super.initState();
+    sessionStore = context.sessionStore;
     _clients = _generateClients();
     WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
   }
@@ -52,7 +52,7 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
           name: 'Cliente ${(i + 1).toString().padLeft(2, '0')}',
           detail: 'Detalle del cliente ${i + 1}',
           status: ClientStatus.pending,
-          createdBy: widget.sessionStore.userProfile?.name ?? 'Sistema',
+          createdBy: sessionStore.userProfile?.name ?? 'Sistema',
           createdAt: createdAt,
         ),
       );
@@ -96,7 +96,7 @@ class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
   @override
   Widget build(BuildContext context) {
     final clients = _filteredClients;
-    final userName = widget.sessionStore.userProfile?.name ?? 'Invitado';
+    final userName = sessionStore.userProfile?.name ?? 'Invitado';
 
     return Scaffold(
       appBar: AppBar(title: Text('Bienvenido $userName')),
