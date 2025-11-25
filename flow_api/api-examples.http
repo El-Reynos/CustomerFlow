@@ -1,0 +1,58 @@
+### Health Check
+GET http://localhost:8000/health
+
+### Obtener todas las entries
+GET http://localhost:8000/entries
+
+### Crear una nueva entry
+POST http://localhost:8000/entries
+Content-Type: application/json
+
+{
+  "description": "Primera entrada de ejemplo",
+  "expectedArrival": "2024-12-31T10:00:00.000Z",
+  "createdBy": "usuario@example.com"
+}
+
+### Crear otra entry
+POST http://localhost:8000/entries
+Content-Type: application/json
+
+{
+  "description": "Segunda entrada de ejemplo",
+  "expectedArrival": "2025-01-15T14:30:00.000Z",
+  "createdBy": "admin@example.com"
+}
+
+### Actualizar una entry (POST /entries/:_id)
+### Nota: Reemplaza 507f1f77bcf86cd799439011 con el _id real de una entry creada
+POST http://localhost:8000/entries/507f1f77bcf86cd799439011
+Content-Type: application/json
+
+{
+  "description": "Descripción actualizada",
+  "expectedArrival": "2025-02-01T09:00:00.000Z",
+  "createdBy": "nuevo@usuario.com"
+}
+
+### Actualizar otra entry
+### Nota: Reemplaza 507f1f77bcf86cd799439012 con el _id real de una entry creada
+POST http://localhost:8000/entries/507f1f77bcf86cd799439012
+Content-Type: application/json
+
+{
+  "description": "Entry actualizada",
+  "expectedArrival": "2025-03-01T12:00:00.000Z"
+}
+
+### Eliminar una entry
+### Nota: Reemplaza 507f1f77bcf86cd799439011 con el _id real de una entry creada
+DELETE http://localhost:8000/entries/507f1f77bcf86cd799439011
+
+### Eliminar otra entry
+### Nota: Reemplaza 507f1f77bcf86cd799439012 con el _id real de una entry creada
+DELETE http://localhost:8000/entries/507f1f77bcf86cd799439012
+
+### Obtener todas las entries después de las operaciones
+GET http://localhost:8000/entries
+
