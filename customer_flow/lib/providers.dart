@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 
 List<Provider> getProviders() {
   final dio = Dio();
+  dio.options.baseUrl = 'http://localhost:8000';
+  dio.options.validateStatus = (_) => true; // hace que los status code no hagan throw
   return [
     Provider<EntryResource>(create: (_) => EntryResource(apiClient: dio)),
     Provider<SessionStore>(create: (_) => SessionStore()),

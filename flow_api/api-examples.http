@@ -47,7 +47,7 @@ Content-Type: application/json
 
 ### Eliminar una entry
 ### Nota: Reemplaza 507f1f77bcf86cd799439011 con el _id real de una entry creada
-DELETE http://localhost:8000/entries/507f1f77bcf86cd799439011
+DELETE http://localhost:8000/entries/69261bf005bfae381432991f
 
 ### Eliminar otra entry
 ### Nota: Reemplaza 507f1f77bcf86cd799439012 con el _id real de una entry creada
