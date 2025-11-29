@@ -3,6 +3,7 @@ import 'package:customer_flow/pages/customer_flow_editor/customer_flow_editor_st
 import 'package:customer_flow/pages/entry_popup_editor/entry_editor_page.dart';
 import 'package:customer_flow/stores/sesion_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 
 class CustomerFlowEditorPage extends StatefulWidget {
@@ -15,27 +16,65 @@ class CustomerFlowEditorPage extends StatefulWidget {
 class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
   @override
   Widget build(BuildContext context) => Provider(
-    create: (context) =>
-        CustomerFlowEditorStore(entryResource: context.entryResource, sessionStore: context.sessionStore),
+    create: (context) => CustomerFlowEditorStore(
+      entryResource: context.entryResource,
+      sessionStore: context.sessionStore,
+    )..initialize(),
     builder: (context, _) {
       final store = context.customerFlowEditorStore;
       return Scaffold(
-        appBar: AppBar(title: Text(store.userName)),
+        appBar: AppBar(
+          title: Text(store.userName),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              context.sessionStore.logout();
+              Navigator.of(context).pop();
+            },
+          ),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-          await Navigator.of(context).push(
-            PageRouteBuilder(
-              pageBuilder: (_, _, _) => const EntryEditorPage(),
-              opaque: false,
-              barrierDismissible: true,
-              fullscreenDialog: true,
-            ),
-          );
+            await Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (_, _, _) => const EntryEditorPage(),
+                opaque: false,
+                barrierDismissible: true,
+                fullscreenDialog: true,
+              ),
+            );
           },
           child: const Icon(Icons.add),
         ),
-        body: const Column(children: [Text('Customer Flow Editor')]),
+        body: Observer(
+          builder: (_) =>
+              store.isLoading == true ? const Text('Cargando') : const _List(),
+        ),
       );
     },
   );
+}
+
+class _List extends StatelessWidget {
+  const _List();
+
+  @override
+  Widget build(BuildContext context) {
+    final store = context.customerFlowEditorStore;
+    return ListView.builder(
+      itemCount: store.list.length,
+      itemBuilder: (context, index) {
+        final entry = store.list[index];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: ListTile(
+            title: Text(entry.description),
+            subtitle: Text(
+              'Creado por: ${entry.createdBy }\nLlegada esperada: ${ entry.expectedArrival }',
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

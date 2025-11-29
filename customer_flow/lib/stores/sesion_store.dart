@@ -20,6 +20,11 @@ abstract class _SessionStore with Store {
     _isLogged = true;
   }
 
+  @action
+  void logout(){
+    _isLogged = false;
+  }
+
   @readonly
   bool _isLogged = false;
 }
