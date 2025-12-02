@@ -2,7 +2,8 @@ import * as entryService from '../services/entryService.js';
 
 // Controlador para obtener todas las entries
 export const getAllEntries = async (req, res) => {
-  const result = await entryService.getAllEntries();
+  const createdBy = req.query.createdBy;
+  const result = await entryService.getAllEntries(createdBy);
   
   if (result.success) {
     res.status(200).json({

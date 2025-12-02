@@ -1,5 +1,6 @@
 import 'package:customer_flow/data/model/entry.model.dart';
 import 'package:customer_flow/data/resource/process_response.dart';
+import 'package:customer_flow/pages/login/login_store.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,9 +14,9 @@ class EntryResource {
 
   EntryResource({required this.apiClient});
 
-  Future<List<EntryModel>> getEntries() async {
+  Future<List<EntryModel>> getEntries(User? user) async {
     try {
-      final response = await apiClient.get('/entries');
+      final response = await apiClient.get('/entries', queryParameters: {'createdBy': user?.id});
 
       final entries = processResponse<List<EntryModel>>(response, (data) {
         if (data is! List<dynamic>) {
@@ -41,7 +42,7 @@ class EntryResource {
   }
 
   Future<EntryModel> updateEntry(String id, EntryModel data) async {
-    final response = await apiClient.put('/entries/$id', data: data.toJson());
+    final response = await apiClient.post('/entries/$id', data: data.toJson());
     final entry = processResponse<EntryModel>(response, (data) {
       if (data is! Map<String, dynamic>) {
         throw Exception('Invalid data format: ${data.runtimeType}');

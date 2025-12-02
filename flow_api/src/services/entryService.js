@@ -25,9 +25,10 @@ const validateEntryData = (data) => {
 };
 
 // Servicio para obtener todas las entries
-export const getAllEntries = async () => {
+export const getAllEntries = async (createdBy) => {
   try {
-    const entries = await Entry.find({}).sort({ createdAt: -1 });
+    const query = createdBy ? { createdBy } : {};
+    const entries = await Entry.find(query).sort({ createdAt: -1 });
     return {
       success: true,
       data: entries

@@ -9,9 +9,9 @@ POST http://localhost:8000/entries
 Content-Type: application/json
 
 {
-  "description": "Primera entrada de ejemplo",
-  "expectedArrival": "2024-12-31T10:00:00.000Z",
-  "createdBy": "usuario@example.com"
+  "description": "g Primera entrada de ejemplo",
+  "expectedArrival": "2024-12-29T10:00:00.000Z",
+  "createdBy": "6655bdf2b2cba31a51234567"
 }
 
 ### Crear otra entry
@@ -51,7 +51,7 @@ DELETE http://localhost:8000/entries/69261bf005bfae381432991f
 
 ### Eliminar otra entry
 ### Nota: Reemplaza 507f1f77bcf86cd799439012 con el _id real de una entry creada
-DELETE http://localhost:8000/entries/507f1f77bcf86cd799439012
+DELETE http://localhost:8000/entries/692ddb32a4a00e569838797b
 
 ### Obtener todas las entries después de las operaciones
 GET http://localhost:8000/entries
