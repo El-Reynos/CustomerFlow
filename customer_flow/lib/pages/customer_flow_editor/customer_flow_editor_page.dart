@@ -4,6 +4,7 @@ import 'package:customer_flow/pages/entry_popup_editor/entry_editor_page.dart';
 import 'package:customer_flow/stores/sesion_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -17,18 +18,21 @@ class CustomerFlowEditorPage extends StatefulWidget {
 class _CustomerFlowEditorPageState extends State<CustomerFlowEditorPage> {
   @override
   Widget build(BuildContext context) => Provider(
-    create: (context) =>
-        CustomerFlowEditorStore(entryResource: context.entryResource, sessionStore: context.sessionStore)..initialize(),
+    create: (context) => CustomerFlowEditorStore(
+      entryResource: context.entryResource,
+      sessionStore: context.sessionStore,
+      isAnonymous: false,
+    )..initialize(),
     builder: (context, _) {
       final store = context.customerFlowEditorStore;
       return Scaffold(
         appBar: AppBar(
-          title: Text('Bienvenido, ${store.userName}'),
+          title: Text('Bienvenido, ${context.sessionStore.userProfile!.name}'),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
               context.sessionStore.logout();
-              Navigator.of(context).pop();
+              context.go('/');
             },
           ),
         ),

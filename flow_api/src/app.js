@@ -1,9 +1,13 @@
 import express from 'express';
+import cors from 'cors';
 import entryRoutes from './routes/entryRoutes.js';
 import { errorHandler, notFoundHandler } from './middleware/errorHandler.js';
 import { requestLogger } from './middleware/requestLogger.js';
 
 const app = express();
+
+// Middleware para CORS
+app.use(cors());
 
 // Middleware para parsing JSON
 app.use(express.json());

@@ -14,7 +14,7 @@ class EntryResource {
 
   EntryResource({required this.apiClient});
 
-  Future<List<EntryModel>> getEntries(User? user) async {
+  Future<List<EntryModel>> getEntries([User? user]) async {
     try {
       final response = await apiClient.get('/entries', queryParameters: {'createdBy': user?.id});
 

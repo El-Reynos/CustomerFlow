@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:customer_flow/data/model/entry.model.dart';
 import 'package:customer_flow/data/resource/entry.resource.dart';
 import 'package:customer_flow/stores/sesion_store.dart';
@@ -17,12 +19,13 @@ class CustomerFlowEditorStore = _CustomerFlowEditorStoreBase with _$CustomerFlow
 abstract class _CustomerFlowEditorStoreBase with Store {
   final EntryResource entryResource;
   final SessionStore sessionStore;
-  final String userName;
+  final bool isAnonymous;
+
+  Timer? refreshTimer;
 
   final ScrollController scrollController = ScrollController();
 
-  _CustomerFlowEditorStoreBase({required this.entryResource, required this.sessionStore})
-    : userName = sessionStore.userProfile!.name;
+  _CustomerFlowEditorStoreBase({required this.entryResource, required this.sessionStore, required this.isAnonymous});
 
   @readonly
   bool _isLoading = true;
@@ -50,8 +53,23 @@ abstract class _CustomerFlowEditorStoreBase with Store {
 
   @action
   Future<void> initialize() async {
-    _allItems = await entryResource.getEntries(sessionStore.userProfile);
+    await refreshData();
     _isLoading = false;
+    if (isAnonymous) {
+      refreshTimer = Timer.periodic(const Duration(minutes: 1), (_) => refreshData());
+    }
+  }
+
+  @action
+  Future<void> refreshData() async {
+    final oldLength = _allItems?.length ?? 0;
+
+    _allItems = isAnonymous
+        ? await entryResource.getEntries()
+        : await entryResource.getEntries(sessionStore.userProfile);
+
+    final newLength = _allItems?.length ?? 0;
+    if (oldLength == newLength) return;
     // Esperar a que el widget se renderice antes de hacer scroll
     SchedulerBinding.instance.addPostFrameCallback((_) {
       if (scrollController.hasClients && scrollController.position.maxScrollExtent > 0) {
@@ -97,6 +115,7 @@ abstract class _CustomerFlowEditorStoreBase with Store {
 
   void dispose() {
     scrollController.dispose();
+    refreshTimer?.cancel();
   }
 }
 

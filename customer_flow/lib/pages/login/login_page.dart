@@ -1,8 +1,8 @@
-import 'package:customer_flow/pages/customer_flow_editor/customer_flow_editor_page.dart';
 import 'package:customer_flow/pages/login/login_store.dart';
 import 'package:customer_flow/stores/sesion_store.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobx/mobx.dart';
 import 'package:provider/provider.dart';
 
@@ -19,12 +19,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     final sessionStore = context.sessionStore;
-    _disposer = reaction<bool>(
-      (_) => sessionStore.isLogged,
-      (isLogged) => isLogged
-          ? Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CustomerFlowEditorPage()))
-          : null,
-    );
+    _disposer = reaction<bool>((_) => sessionStore.isLogged, (isLogged) => isLogged ? context.go('/editor') : null);
   }
 
   @override
